@@ -1,0 +1,54 @@
+name: Atualizar monitor
+
+on:
+  schedule:
+    # Dias úteis: a PNAD Contínua mensal sai no fim do mês e a trimestral no meio do mês.
+    # Só há commit quando o IBGE publica um período novo.
+    - cron: "0 15 * * 1-5"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["R/**", "main.R", "tests/**", ".github/workflows/**"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: atualizar-monitor
+  cancel-in-progress: false
+
+env:
+  LANG: C.UTF-8
+  LC_ALL: C.UTF-8
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Instalar pacotes
+        run: Rscript -e 'install.packages(c("httr", "jsonlite", "dplyr", "tidyr", "ggplot2", "testthat"))'
+
+      - name: Testes
+        run: Rscript -e 'testthat::test_dir("tests/testthat", stop_on_failure = TRUE)'
+
+      - name: Coletar dados e gerar o monitor
+        run: Rscript main.R
+
+      - name: Publicar resultados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data output nota
+          if git diff --staged --quiet; then
+            echo "Sem novidades."
+          else
+            git commit -m "Atualiza monitor com dados de $(date +%Y-%m-%d)"
+            git pull --rebase
+            git push
+          fi
