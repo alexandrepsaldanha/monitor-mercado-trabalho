@@ -23,6 +23,8 @@ Duas escolhas de método vêm daí:
 - **Comparar períodos sem sobreposição.** Trimestres móveis vizinhos (mar-mai e abr-jun, por exemplo) compartilham dois meses de entrevistas, então a diferença entre eles diz pouco. O monitor compara o último trimestre com o encerrado três meses antes e com o mesmo trimestre do ano anterior, como faz o IBGE.
 - **Testar a diferença, e não só a sobreposição das bandas.** Bandas que não se sobrepõem indicam diferença significativa, mas bandas que se sobrepõem não indicam o contrário. O teste correto usa o intervalo de confiança da *diferença*, que considera a covariância entre as estimativas. Na PNAD Contínua essa covariância é grande, porque 4/5 dos domicílios se repetem de um trimestre para o outro (Lila e Freitas, 2007). As classificações usadas aqui são as oficiais do IBGE: **Z** indica variação significativa a 95%, e **A**, ausência de significância.
 
+**O que os dados mostram.** O monitor compara, em toda a série, a regra visual com a classificação do IBGE. A regra visual nunca aponta mudança onde não há, mas deixa passar muitas das variações significativas. Até jun-ago/26, por exemplo, 22% das variações significativas da taxa de desocupação em relação a três trimestres antes aconteceram com as bandas sobrepostas; no rendimento médio real, 94%. A tabela atualizada está na [nota](nota/ultima_nota.md#sobreposição-das-bandas-não-é-teste).
+
 ## Indicadores
 
 | Indicador | Periodicidade | Tabela do SIDRA |

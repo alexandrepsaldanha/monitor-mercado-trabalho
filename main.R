@@ -20,7 +20,9 @@ main <- function(coletar_dados = TRUE) {
 
   bandas(todos[todos$indicador == "desocupacao", ], "output/figuras/desocupacao_bandas.png")
   painel(todos, "output/figuras/painel.png", info)
-  escrever_nota(todos, info)
+  crit <- comparar_criterios(todos, info)
+  utils::write.csv(crit, "output/tabelas/sobreposicao_vs_ibge.csv", row.names = FALSE)
+  escrever_nota(todos, info, crit = crit)
   message("Monitor atualizado: ", rotulo_trimestre(max(todos$data[todos$indicador == "desocupacao"])))
 }
 

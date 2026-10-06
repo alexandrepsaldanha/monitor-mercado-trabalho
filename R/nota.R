@@ -35,7 +35,7 @@ linha_tabela <- function(d, info) {
 
 `%||%` <- function(a, b) if (is.null(a) || length(a) == 0 || is.na(a)) b else a
 
-escrever_nota <- function(todos, info, caminho = "nota/ultima_nota.md") {
+escrever_nota <- function(todos, info, caminho = "nota/ultima_nota.md", crit = NULL) {
   por_ind <- split(todos, todos$indicador)
   moveis <- info$id[info$freq == "movel"]
   ult <- max(por_ind[["desocupacao"]]$data)
@@ -64,10 +64,61 @@ escrever_nota <- function(todos, info, caminho = "nota/ultima_nota.md") {
     "",
     "![Taxa de desocupação e significância](../output/figuras/desocupacao_bandas.png)",
     "",
+    if (!is.null(crit)) secao_criterios(crit),
     "![Indicadores](../output/figuras/painel.png)",
     ""
   )
   dir.create(dirname(caminho), showWarnings = FALSE, recursive = TRUE)
   writeLines(texto, caminho, useBytes = TRUE)
   invisible(texto)
+}
+
+# Critério visual (sobreposição das bandas) contra a classificação oficial do IBGE.
+# Bandas que não se sobrepõem implicam diferença significativa; o contrário não vale,
+# porque a covariância do painel reduz a variância da diferença.
+comparar_criterios <- function(todos, info) {
+  linhas <- list()
+  for (i in seq_len(nrow(info))) {
+    x <- todos[todos$indicador == info$id[i], ]
+    x <- x[order(x$data), ]
+    passo <- c(3, 12)      # em meses: o trimestre civil anterior também fica 3 meses antes
+    for (k in seq_along(passo)) {
+      ant <- x[match(seq_mes(x$data, -passo[k]), x$data), ]
+      sinal <- if (k == 1) x$sinal_trim else x$sinal_anual
+      ok <- !is.na(sinal) & !is.na(ant$valor)
+      sobrepoe <- x$ic_inf <= ant$ic_sup & ant$ic_inf <= x$ic_sup
+      linhas[[length(linhas) + 1]] <- data.frame(
+        indicador = info$nome[i],
+        comparacao = if (k == 2) "um ano antes" else if (info$freq[i] == "movel") "três trimestres móveis antes" else "trimestre anterior",
+        periodos = sum(ok),
+        significativas = sum(ok & sinal == "Z"),
+        significativas_com_sobreposicao = sum(ok & sinal == "Z" & sobrepoe),
+        sem_sobreposicao_e_nao_significativas = sum(ok & sinal == "A" & !sobrepoe)
+      )
+    }
+  }
+  do.call(rbind, linhas)
+}
+
+seq_mes <- function(datas, meses) {
+  as.Date(vapply(datas, function(d) as.character(seq(d, by = paste(meses, "months"), length.out = 2)[2]), ""))
+}
+
+secao_criterios <- function(crit) {
+  linhas <- sprintf("| %s | %s | %d | %d | %d (%s%%) |", crit$indicador, crit$comparacao, crit$periodos,
+                    crit$significativas, crit$significativas_com_sobreposicao,
+                    br(100 * crit$significativas_com_sobreposicao / pmax(crit$significativas, 1), 0))
+  c("## Sobreposição das bandas não é teste",
+    "",
+    "Em toda a série, quantas variações classificadas como significativas pelo IBGE teriam passado despercebidas por quem olhasse só a sobreposição dos intervalos:",
+    "",
+    "| Indicador | Comparação | Períodos | Significativas (Z) | Significativas com bandas sobrepostas |",
+    "|---|---|---:|---:|---:|",
+    linhas,
+    "",
+    if (sum(crit$sem_sobreposicao_e_nao_significativas) == 0)
+      "Em nenhum caso bandas separadas coincidiram com variação não significativa: a regra visual é conservadora. Ela não aponta mudança onde não há, mas deixa de ver boa parte das que há. Intervalos calculados a partir das estimativas e dos coeficientes de variação publicados, que são arredondados."
+    else sprintf("Em %d casos, bandas separadas coincidiram com variação não significativa, efeito do arredondamento das estimativas e dos coeficientes de variação publicados.",
+                 sum(crit$sem_sobreposicao_e_nao_significativas)),
+    "")
 }

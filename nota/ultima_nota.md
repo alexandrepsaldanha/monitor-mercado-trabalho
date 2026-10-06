@@ -24,5 +24,24 @@ Variações em relação a três trimestres antes (períodos sem sobreposição)
 
 ![Taxa de desocupação e significância](../output/figuras/desocupacao_bandas.png)
 
+## Sobreposição das bandas não é teste
+
+Em toda a série, quantas variações classificadas como significativas pelo IBGE teriam passado despercebidas por quem olhasse só a sobreposição dos intervalos:
+
+| Indicador | Comparação | Períodos | Significativas (Z) | Significativas com bandas sobrepostas |
+|---|---|---:|---:|---:|
+| Taxa de desocupação | três trimestres móveis antes | 171 | 147 | 32 (22%) |
+| Taxa de desocupação | um ano antes | 162 | 142 | 12 (8%) |
+| Nível da ocupação | três trimestres móveis antes | 171 | 138 | 50 (36%) |
+| Nível da ocupação | um ano antes | 162 | 118 | 20 (17%) |
+| Rendimento médio real habitual | três trimestres móveis antes | 171 | 70 | 66 (94%) |
+| Rendimento médio real habitual | um ano antes | 162 | 107 | 53 (50%) |
+| Massa de rendimento real habitual | três trimestres móveis antes | 171 | 73 | 67 (92%) |
+| Massa de rendimento real habitual | um ano antes | 162 | 133 | 62 (47%) |
+| Taxa de informalidade | trimestre anterior | 42 | 17 | 14 (82%) |
+| Taxa de informalidade | um ano antes | 39 | 29 | 7 (24%) |
+
+Em nenhum caso bandas separadas coincidiram com variação não significativa: a regra visual é conservadora. Ela não aponta mudança onde não há, mas deixa de ver boa parte das que há. Intervalos calculados a partir das estimativas e dos coeficientes de variação publicados, que são arredondados.
+
 ![Indicadores](../output/figuras/painel.png)
 
