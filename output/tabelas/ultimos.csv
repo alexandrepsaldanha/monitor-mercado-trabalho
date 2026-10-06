@@ -1,0 +1,6 @@
+"indicador","data","periodo","valor","cv","var_trim","sinal_trim","var_anual","sinal_anual","ic_inf","ic_sup"
+"desocupacao",2026-08-01,"jun-jul-ago 2026",5.3,1.3,-0.3,"Z",-0.3,"Z",5.164956,5.435044
+"informalidade",2026-06-01,"2º trimestre 2026",37.4,0.5,0.1,"A",-0.4,"A",37.03348,37.76652
+"massa",2026-08-01,"jun-jul-ago 2026",385566,0.7,1.4,"Z",4.8,"Z",380276.03448,390855.96552
+"ocupacao",2026-08-01,"jun-jul-ago 2026",58.9,0.2,0.3,"Z",0.2,"A",58.669112,59.130888
+"rendimento",2026-08-01,"jun-jul-ago 2026",3777,0.7,0.7,"A",3.7,"Z",3725.17956,3828.82044
