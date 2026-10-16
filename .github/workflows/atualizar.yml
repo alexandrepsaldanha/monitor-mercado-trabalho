@@ -4,6 +4,8 @@ on:
   schedule:
     # Dias úteis: a PNAD Contínua mensal sai no fim do mês e a trimestral no meio do mês.
     # Só há commit quando o IBGE publica um período novo.
+    # 12:20 UTC (9h20 em Brasília), logo após a divulgação das 9h; 15 UTC como segunda tentativa.
+    - cron: "20 12 * * 1-5"
     - cron: "0 15 * * 1-5"
   workflow_dispatch:
   push:
